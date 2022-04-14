@@ -291,6 +291,124 @@ void CSCAN(int head, int req[], int left)
 
 void LOOK(int head, int req[], int left)
 {
+    // init variable
+    int current_pos = head;
+    int total = 0;
+    int index = 0;
+    int visit_seq[REQUEST_NUM];
+    int visited[REQUEST_NUM];
+
+    // populate visited array to 0(false)
+    for (size_t i = 0; i < REQUEST_NUM; i++)
+    {
+        visited[i] = 0;
+    }
+
+    for (int x = 0; x < 2; x++)//LOOP twice each time to different direction
+    {
+        if (left)//LOOK LEFT
+        {
+            for (int i = REQUEST_NUM - 1; i >= 0; --i)
+            {
+                if (req[i] <= current_pos && ! visited[i])
+                {
+                    visit_seq[index] = req[i];
+                    index += 1;
+                    total += distance(current_pos, req[i]);
+                    current_pos = req[i];
+                    visited[i] = 1;
+                }
+            }
+            left = ! left;//Change direction when one direction is done
+        }else{//LOOK RIGHT
+            for (int i = 0; i < REQUEST_NUM; i++)
+            {
+                if (req[i] >= current_pos && ! visited[i])
+                {
+                    visit_seq[index] = req[i];
+                    index += 1;
+                    total += distance(current_pos, req[i]);
+                    current_pos = req[i];
+                    visited[i] = 1;
+                }
+            }
+            left = ! left;//Change direction when one direction is done
+        }
+    }
+    
+    //print out the sequence of visiting
+    for (size_t i = 0; i < REQUEST_NUM - 1; i++)
+    {
+        printf("%d, ", visit_seq[i]);
+    }
+
+    printf("%d\n", visit_seq[REQUEST_NUM - 1]);
+    printf("\n");
+
+    // print the total movements
+    printf("LOOK - Total head movements = %d\n", total);
+    
+    
+}
+
+void CLOOK(int head, int req[], int left){
+    // init variable
+    int current_pos = head;
+    int total = 0;
+    int index = 0;
+    int visit_seq[REQUEST_NUM];
+    int visited[REQUEST_NUM];
+
+    // populate visited array to 0(false)
+    for (size_t i = 0; i < REQUEST_NUM; i++)
+    {
+        visited[i] = 0;
+    }
+
+    for (int x = 0; x < 2; x++)
+    {
+        if (left)//LOOK LEFT
+        {
+            for (int i = REQUEST_NUM - 1; i >= 0; --i)
+            {
+                if ((req[i] <= current_pos || x == 1) && ! visited[i]) 
+                // find the larggest element smaller than head unless is second loop(from largest)
+                {
+                    visit_seq[index] = req[i];
+                    index += 1;
+                    total += distance(current_pos, req[i]);
+                    current_pos = req[i];
+                    visited[i] = 1;
+                }
+            }
+        }else{
+            for (int i = 0; i < REQUEST_NUM; i++)
+            {
+                if ((req[i] >= current_pos || x == 1) && ! visited[i]) 
+                // find the smallest element larger than head unless is second loop(from smallest)
+                {
+                    visit_seq[index] = req[i];
+                    index += 1;
+                    total += distance(current_pos, req[i]);
+                    current_pos = req[i];
+                    visited[i] = 1;
+                }
+            }
+        }
+    }
+    
+    //print out the sequence of visiting
+    for (size_t i = 0; i < REQUEST_NUM - 1; i++)
+    {
+        printf("%d, ", visit_seq[i]);
+    }
+
+    printf("%d\n", visit_seq[REQUEST_NUM - 1]);
+    printf("\n");
+
+    // print the total movements
+    printf("CLOOK - Total head movements = %d\n", total);
+    
 }
 
 int main(int argc, const char *argv[])
@@ -385,9 +503,14 @@ int main(int argc, const char *argv[])
 
     // LOOK
     printf("LOOK DISK SCHEDULING ALGORITHM\n");
-
+    printf("\n");
+    LOOK(head, sorted_req, left);
+    printf("\n");
     // C - LOOK
     printf("C-LOOK DISK SCHEDULING ALGORITHM\n");
+    printf("\n");
+    CLOOK(head, sorted_req, left);
+    printf("\n");
 
     return 0;
 }
