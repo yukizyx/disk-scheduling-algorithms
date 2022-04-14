@@ -50,7 +50,8 @@ void FCFS(int head, int req[])
 };
 
 void SSTF(int head, int req[])
-{
+{   
+    //init variables
     int current_pos = head;
     int total = 0;
     int index = 0;
@@ -59,14 +60,17 @@ void SSTF(int head, int req[])
     int candidate = -1;
     int visit_seq[REQUEST_NUM];
 
+    //populate visited array to 0(false)
     for (size_t i = 0; i < REQUEST_NUM; i++)
     {
         visited[i] = 0;
     }
     
+    //main loop
     for (size_t i = 0; i < REQUEST_NUM; i++)
     {
         min = 9999999;
+        //finding the minimum distance to head
         for (size_t j = 0; j < REQUEST_NUM; j++)
         {
             if ( ! visited[j] && min > distance(head, req[j]))
@@ -75,13 +79,14 @@ void SSTF(int head, int req[])
                 min = distance(head, req[j]);
             }
         }
+
         visited[candidate] = 1;
         visit_seq[index] = req[candidate];
         index += 1;
         total += distance(head, req[candidate]);
         head = req[candidate];
     }
-
+    // print out the sequence of visiting
     for (size_t i = 0; i < REQUEST_NUM - 1; i++)
     {
         printf("%d, ", visit_seq[i]);
@@ -95,6 +100,9 @@ void SSTF(int head, int req[])
 
 }
 
+void LOOK(int head, int req[], int left){
+
+}
 int main(int argc, const char *argv[])
 {
     // handle 2 command line args
@@ -108,6 +116,23 @@ int main(int argc, const char *argv[])
     // store 1st arg as int, 2nd arg as string
     int head = atoi(argv[1]);
     const char *str = argv[2];
+
+    //if is LEFT, then set the value to 1, if RIGHT than 0, other value will result a termination of program
+    int left = -1;
+    if (strcmp(str, "LEFT") == 0)
+    {
+        left = 1;
+    }else if(strcmp(str, "RIGHT") == 0)
+    {
+        left = 0;
+    }else
+    {
+        printf("Invalid 2nd arg, either 'LEFT' or 'RIGHT'");
+        return -1;
+    }
+
+    printf("%d\n", left);
+    
 
     // read the file and store the int to an array
     FILE *fptr = fopen("request.bin", "rb");
@@ -136,7 +161,7 @@ int main(int argc, const char *argv[])
     printf("\n");
     SSTF(head, request);
     printf("\n");
-    
+
     // SCAN
     printf("SCAN DISK SCHEDULING ALGORITHM\n");
 
