@@ -49,6 +49,52 @@ void FCFS(int head, int req[])
     printf("FCFS - Total head movements = %d\n", total);
 };
 
+void SSTF(int head, int req[])
+{
+    int current_pos = head;
+    int total = 0;
+    int index = 0;
+    int visited[REQUEST_NUM];
+    int min = 9999999;
+    int candidate = -1;
+    int visit_seq[REQUEST_NUM];
+
+    for (size_t i = 0; i < REQUEST_NUM; i++)
+    {
+        visited[i] = 0;
+    }
+    
+    for (size_t i = 0; i < REQUEST_NUM; i++)
+    {
+        min = 9999999;
+        for (size_t j = 0; j < REQUEST_NUM; j++)
+        {
+            if ( ! visited[j] && min > distance(head, req[j]))
+            {
+                candidate = j;
+                min = distance(head, req[j]);
+            }
+        }
+        visited[candidate] = 1;
+        visit_seq[index] = req[candidate];
+        index += 1;
+        total += distance(head, req[candidate]);
+        head = req[candidate];
+    }
+
+    for (size_t i = 0; i < REQUEST_NUM - 1; i++)
+    {
+        printf("%d, ", visit_seq[i]);
+    }
+
+    printf("%d\n", visit_seq[REQUEST_NUM - 1]);
+    printf("\n");
+
+    // print the total movements
+    printf("FCFS - Total head movements = %d\n", total);
+
+}
+
 int main(int argc, const char *argv[])
 {
     // handle 2 command line args
@@ -82,11 +128,15 @@ int main(int argc, const char *argv[])
     printf("\n");
 
     FCFS(head, request);
+
     printf("\n");
 
     // SSTF
     printf("SSTF DISK SCHEDULING ALGORITHM\n");
-
+    printf("\n");
+    SSTF(head, request);
+    printf("\n");
+    
     // SCAN
     printf("SCAN DISK SCHEDULING ALGORITHM\n");
 
