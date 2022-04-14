@@ -103,6 +103,7 @@ void SSTF(int head, int req[])
 void LOOK(int head, int req[], int left){
 
 }
+
 int main(int argc, const char *argv[])
 {
     // handle 2 command line args
@@ -130,10 +131,9 @@ int main(int argc, const char *argv[])
         printf("Invalid 2nd arg, either 'LEFT' or 'RIGHT'");
         return -1;
     }
-
-    printf("%d\n", left);
     
 
+    
     // read the file and store the int to an array
     FILE *fptr = fopen("request.bin", "rb");
 
@@ -141,6 +141,28 @@ int main(int argc, const char *argv[])
     size_t num = fread(request, sizeof(int), REQUEST_NUM, fptr);
 
     fclose(fptr);
+
+    //use bubble sort to sort request array
+    int sorted_req[REQUEST_NUM];
+    int temp;
+    //copy array
+    for (size_t i = 0; i < REQUEST_NUM; i++)
+    {
+        sorted_req[i] = request[i];
+    }
+    //inplace bubble sort
+    for (size_t i = 0; i < REQUEST_NUM - 1; i++)
+    {
+        for (size_t j = 0; j < REQUEST_NUM - i - 1; j++)
+        {
+            if (sorted_req[j] > sorted_req[j+1]) 
+            {
+                temp = sorted_req[j];
+                sorted_req[j] = sorted_req[j+1];
+                sorted_req[j+1] = temp;
+            }
+        }
+    }
 
     // print basic info
     printf("Total requests = %d\n", REQUEST_NUM);
