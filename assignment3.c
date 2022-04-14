@@ -190,6 +190,105 @@ void SCAN(int head, int req[], int left)
     printf("SCAN - Total head movements = %d\n", total);
 }
 
+void CSCAN(int head, int req[], int left)
+{
+    int index;
+    int i;
+    int total = 0;
+    int visit[REQUEST_NUM];
+    int visit_index = 0;
+
+    // the start direction is left
+    if (left == 1)
+    {
+        // find position (index) of head
+        for (i = 0; i < REQUEST_NUM; i++)
+        {
+            if (head < req[i])
+            {
+                index = i;
+                break;
+            }
+        }
+
+        // move from head to the most left position
+        for (i = index - 1; i >= 0; i--)
+        {
+            total += distance(head, req[i]);
+            head = req[i];
+            visit[visit_index] = head;
+            visit_index++;
+        }
+
+        // move from the most left position to 0
+        total += distance(head, 0);
+        head = 0;
+
+        // big jump to max
+        head = MAX_POSITION;
+        total += distance(0, MAX_POSITION);
+
+        // move from max to left
+        for (i = REQUEST_NUM - 1; i >= index; i--)
+        {
+            total += distance(head, req[i]);
+            head = req[i];
+            visit[visit_index] = head;
+            visit_index++;
+        }
+    }
+    // the start direction is right
+    else
+    {
+        // find position (index) of head
+        for (i = 0; i < REQUEST_NUM; i++)
+        {
+            if (head <= req[i])
+            {
+                index = i;
+                break;
+            }
+        }
+
+        // move from head to the most right position
+        for (i = index; i < REQUEST_NUM; i++)
+        {
+            total += distance(head, req[i]);
+            head = req[i];
+            visit[visit_index] = head;
+            visit_index++;
+        }
+
+        // move from the most right position to max
+        total += distance(head, MAX_POSITION);
+        head = MAX_POSITION;
+
+        // big jump to 0
+        head = 0;
+        total += distance(0, MAX_POSITION);
+
+        // move from 0 to right
+        for (i = 0; i < index; i++)
+        {
+            total += distance(head, req[i]);
+            head = req[i];
+            visit[visit_index] = head;
+            visit_index++;
+        }
+    }
+
+    // print the visit array
+    for (i = 0; i < REQUEST_NUM - 1; i++)
+    {
+        printf("%d, ", visit[i]);
+    }
+    printf("%d\n", visit[REQUEST_NUM - 1]);
+    printf("\n");
+
+    // print the total movements
+    printf("C-SCAN - Total head movements = %d\n", total);
+}
+
 void LOOK(int head, int req[], int left)
 {
 }
@@ -280,6 +379,9 @@ int main(int argc, const char *argv[])
 
     // C - SCAN
     printf("C-SCAN DISK SCHEDULING ALGORITHM\n");
+    printf("\n");
+    CSCAN(head, sorted_req, left);
+    printf("\n");
 
     // LOOK
     printf("LOOK DISK SCHEDULING ALGORITHM\n");
